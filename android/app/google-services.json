@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "990379791427",
+    "project_id": "burnbank-77f17",
+    "storage_bucket": "burnbank-77f17.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990379791427:android:ea4cc289e6ca14f80bf0f6",
+        "android_client_info": {
+          "package_name": "com.example.step_rewards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990379791427-5husbug0l7a4tkhdd5ikka14n3g1cngp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD6A7MEpec9U-cTy0v7Lf45xE6qbmWfoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990379791427-5husbug0l7a4tkhdd5ikka14n3g1cngp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "990379791427-auerukvaqrvbf3r5fn66juaok6mtkv98.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.stepRewards"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
