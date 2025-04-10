@@ -12,23 +12,26 @@ class AuthService extends ChangeNotifier {
   bool _mockSignedIn = false;
 
   AuthService(bool firebaseInitialized)
-      : _firebaseInitialized = firebaseInitialized,
-        _auth = firebaseInitialized ? FirebaseAuth.instance : null;
+    : _firebaseInitialized = firebaseInitialized,
+      _auth = firebaseInitialized ? FirebaseAuth.instance : null;
 
-  User? get currentUser => _firebaseInitialized
-      ? _auth?.currentUser
-      : (_mockSignedIn ? _mockUser : null);
+  User? get currentUser =>
+      _firebaseInitialized
+          ? _auth?.currentUser
+          : (_mockSignedIn ? _mockUser : null);
 
-  Stream<User?> get authStateChanges => _firebaseInitialized
-      ? _auth!.authStateChanges()
-      : Stream.value(_mockUser);
+  Stream<User?> get authStateChanges =>
+      _firebaseInitialized
+          ? _auth!.authStateChanges()
+          : Stream.value(_mockUser);
 
   // Sign up with email and password
   Future<UserCredential?> signUpWithEmail(String email, String password) async {
     if (!_firebaseInitialized) {
       // Mock implementation for development
       await Future.delayed(
-          const Duration(seconds: 1)); // Simulate network delay
+        const Duration(seconds: 1),
+      ); // Simulate network delay
       _mockSignedIn = true;
 
       // Create mock user for development
@@ -59,7 +62,8 @@ class AuthService extends ChangeNotifier {
     if (!_firebaseInitialized) {
       // Mock implementation for development
       await Future.delayed(
-          const Duration(seconds: 1)); // Simulate network delay
+        const Duration(seconds: 1),
+      ); // Simulate network delay
       _mockSignedIn = true;
 
       // Create mock user for development
@@ -103,7 +107,7 @@ class AuthService extends ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verify on some devices
-          await _auth!.signInWithCredential(credential);
+          await _auth.signInWithCredential(credential);
         },
         verificationFailed: (FirebaseAuthException e) {
           onError(e.message ?? 'Verification failed');
@@ -182,11 +186,7 @@ class MockUser implements User {
   @override
   final String displayName;
 
-  MockUser({
-    required this.uid,
-    required this.email,
-    required this.displayName,
-  });
+  MockUser({required this.uid, required this.email, required this.displayName});
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

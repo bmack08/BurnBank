@@ -38,8 +38,8 @@ class StepsService extends ChangeNotifier {
   HealthFactory? _health;
 
   StepsService(this._firebaseInitialized)
-      : _firestore = _firebaseInitialized ? FirebaseFirestore.instance : null,
-        _auth = _firebaseInitialized ? FirebaseAuth.instance : null {
+    : _firestore = _firebaseInitialized ? FirebaseFirestore.instance : null,
+      _auth = _firebaseInitialized ? FirebaseAuth.instance : null {
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       _health = HealthFactory();
     }
@@ -119,15 +119,16 @@ class StepsService extends ChangeNotifier {
       final now = DateTime.now();
       final midnight = DateTime(now.year, now.month, now.day);
 
-      final query = await _firestore!
-          .collection('steps')
-          .where('userId', isEqualTo: userId)
-          .where('date', isEqualTo: Timestamp.fromDate(midnight))
-          .limit(1)
-          .get();
+      final query =
+          await _firestore!
+              .collection('steps')
+              .where('userId', isEqualTo: userId)
+              .where('date', isEqualTo: Timestamp.fromDate(midnight))
+              .limit(1)
+              .get();
 
       if (query.docs.isEmpty) {
-        await _firestore!.collection('steps').add({
+        await _firestore.collection('steps').add({
           'userId': userId,
           'date': Timestamp.fromDate(midnight),
           'stepCount': steps,
@@ -155,7 +156,7 @@ class StepsService extends ChangeNotifier {
 
   void _calculateEarnings() {
     _earnings = (_todaySteps / 10000) * _multiplier;
-    final maxEarnings = 2.0;
+    const maxEarnings = 2.0;
     if (_earnings > maxEarnings) _earnings = maxEarnings;
     notifyListeners();
   }
