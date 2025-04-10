@@ -7,25 +7,36 @@ workflows:
       cocoapods: default
       vars:
         FLUTTER_ROOT: $FLUTTER_ROOT # Ensures podfile sees correct SDK path
+
     scripts:
       - name: Install Flutter dependencies
         script: |
           flutter pub get
           flutter pub upgrade --major-versions
+
       - name: Clean and pre-cache
         script: |
           flutter clean
           flutter precache --ios
+
       - name: iOS Pod Install
         script: |
           cd ios
           pod install
-      - name: Build iOS Release
+
+      - name: Sanitize rogue build flags (-G)
+        script: |
+          find ios -name "*.xcconfig" -exec sed -i '' '/-G/d' {} +
+          find ios -name "*.pbxproj" -exec sed -i '' '/-G/d' {} +
+
+      - name: Build iOS Release (No Code Sign)
         script: |
           flutter build ios --release --no-codesign
+
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
+
     publishing:
       email:
         recipients:
