@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+final _forceLink = HealthFactory(); // <-- even if unused
 
 
 
