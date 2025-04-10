@@ -8,13 +8,13 @@ import 'package:burnbank/services/steps_service.dart';
 import 'dart:async';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
-  _MapScreenState createState() => _MapScreenState();
+  MapScreenState createState() => MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   List<LatLng> _routePoints = [];
   LatLng? _currentPosition;
@@ -23,19 +23,19 @@ class _MapScreenState extends State<MapScreen> {
   double _distance = 0.0; // in meters
   DateTime? _startTime;
   int _estimatedSteps = 0;
-  
+
   @override
   void initState() {
     super.initState();
     _determinePosition();
   }
-  
+
   @override
   void dispose() {
     _positionStream?.cancel();
     super.dispose();
   }
-  
+
   // Get current position and check permissions
   Future<void> _determinePosition() async {
     bool serviceEnabled;
@@ -60,13 +60,14 @@ class _MapScreenState extends State<MapScreen> {
         return;
       }
     }
-    
+
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Location permissions are permanently denied')),
+        const SnackBar(
+            content: Text('Location permissions are permanently denied')),
       );
       return;
-    } 
+    }
 
     // Get current position
     try {
@@ -74,7 +75,7 @@ class _MapScreenState extends State<MapScreen> {
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
       });
-      
+
       // Center map on current position
       if (_currentPosition != null) {
         _mapController.move(_currentPosition!, 15.0);
@@ -85,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
       );
     }
   }
-  
+
   // Start tracking the walk
   void _startTracking() {
     if (_currentPosition == null) {
@@ -94,7 +95,7 @@ class _MapScreenState extends State<MapScreen> {
       );
       return;
     }
-    
+
     setState(() {
       _isTracking = true;
       _routePoints = [_currentPosition!];
@@ -102,7 +103,7 @@ class _MapScreenState extends State<MapScreen> {
       _estimatedSteps = 0;
       _startTime = DateTime.now();
     });
-    
+
     // Set up location tracking
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -111,57 +112,59 @@ class _MapScreenState extends State<MapScreen> {
       ),
     ).listen((Position position) {
       final newPoint = LatLng(position.latitude, position.longitude);
-      
+
       setState(() {
         // Add new point to route
         _routePoints.add(newPoint);
         _currentPosition = newPoint;
-        
+
         // Calculate distance if we have at least two points
         if (_routePoints.length >= 2) {
           final lastIndex = _routePoints.length - 1;
           final lastPoint = _routePoints[lastIndex];
           final secondLastPoint = _routePoints[lastIndex - 1];
-          
+
           // Add distance between last two points
           final distanceBetween = Geolocator.distanceBetween(
-            secondLastPoint.latitude, secondLastPoint.longitude,
-            lastPoint.latitude, lastPoint.longitude,
+            secondLastPoint.latitude,
+            secondLastPoint.longitude,
+            lastPoint.latitude,
+            lastPoint.longitude,
           );
-          
+
           _distance += distanceBetween;
-          
+
           // Update estimated steps (average step length is about 0.762 meters)
           _estimatedSteps = (_distance / 0.762).round();
         }
       });
-      
+
       // Center map on current position
       _mapController.move(newPoint, _mapController.zoom);
     });
   }
-  
+
   // Stop tracking the walk
   void _stopTracking() {
     _positionStream?.cancel();
     setState(() {
       _isTracking = false;
     });
-    
+
     // Save the route data
     _saveRoute();
   }
-  
+
   // Save route and update steps
   void _saveRoute() {
     if (_routePoints.isEmpty) return;
-    
+
     // Calculate duration
     final duration = DateTime.now().difference(_startTime!);
-    
+
     // Update steps in StepsService
     final stepsService = Provider.of<StepsService>(context, listen: false);
-    
+
     // Show summary dialog
     showDialog(
       context: context,
@@ -188,12 +191,13 @@ class _MapScreenState extends State<MapScreen> {
               // Add the estimated steps to today's total
               // In a real app, this would sync with the health API
               stepsService.addSteps(_estimatedSteps);
-              
+
               Navigator.of(context).pop();
               Navigator.of(context).pop(); // Return to home screen
-              
+
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Steps added to your daily total!')),
+                const SnackBar(
+                    content: Text('Steps added to your daily total!')),
               );
             },
             child: const Text('Add Steps'),
@@ -201,10 +205,10 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
     );
-    
+
     // In a real app, save the GPS route to Firebase
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,7 +226,8 @@ class _MapScreenState extends State<MapScreen> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c'],
                 userAgentPackageName: 'com.burnbank.app',
               ),
@@ -255,7 +260,7 @@ class _MapScreenState extends State<MapScreen> {
                 ),
             ],
           ),
-          
+
           // Stats overlay
           Positioned(
             top: 16,
@@ -299,8 +304,10 @@ class _MapScreenState extends State<MapScreen> {
                           StreamBuilder(
                             stream: Stream.periodic(const Duration(seconds: 1)),
                             builder: (context, snapshot) {
-                              final duration = DateTime.now().difference(_startTime!);
-                              return Text('${duration.inMinutes}m ${duration.inSeconds % 60}s');
+                              final duration =
+                                  DateTime.now().difference(_startTime!);
+                              return Text(
+                                  '${duration.inMinutes}m ${duration.inSeconds % 60}s');
                             },
                           ),
                         ],
@@ -317,7 +324,8 @@ class _MapScreenState extends State<MapScreen> {
         onPressed: _isTracking ? _stopTracking : _startTracking,
         icon: Icon(_isTracking ? Icons.stop : Icons.play_arrow),
         label: Text(_isTracking ? 'Stop' : 'Start Walk'),
-        backgroundColor: _isTracking ? Colors.red : Theme.of(context).primaryColor,
+        backgroundColor:
+            _isTracking ? Colors.red : Theme.of(context).primaryColor,
       ),
     );
   }

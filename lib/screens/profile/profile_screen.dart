@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:burnbank/services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -39,10 +39,10 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => authService.signOut(),
-              child: const Text('Sign Out'),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
+              child: const Text('Sign Out'),
             ),
           ],
         ),

@@ -6,25 +6,25 @@ import 'package:burnbank/screens/auth/register_screen.dart';
 import 'package:burnbank/screens/auth/phone_auth_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
-  
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _login() async {
     // Skip validation for quick testing
     if (_emailController.text.isEmpty) {
@@ -38,14 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
       _errorMessage = '';
     });
-    
+
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       await authService.signInWithEmail(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       // No need to navigate manually - AuthenticationWrapper will handle it
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 150,
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // App name
             const Text(
               'BurnBank',
@@ -98,9 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Tagline
             const Text(
               'Get paid to walk!',
@@ -110,9 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.grey,
               ),
             ),
-            
+
             const SizedBox(height: 48),
-            
+
             // Email field
             TextField(
               controller: _emailController,
@@ -123,9 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               keyboardType: TextInputType.emailAddress,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Password field
             TextField(
               controller: _passwordController,
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               obscureText: true,
             ),
-            
+
             // Error message
             if (_errorMessage.isNotEmpty)
               Padding(
@@ -149,41 +149,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Login button
             ElevatedButton(
               onPressed: _isLoading ? null : _login,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: _isLoading 
-                ? const CircularProgressIndicator(color: Colors.white)
-                : const Text('Login'),
+              child: _isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('Login'),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Register link
             TextButton(
               onPressed: () {
                 Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegisterScreen()),
                 );
               },
               child: const Text('Don\'t have an account? Sign Up'),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Phone auth button
             TextButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PhoneAuthScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const PhoneAuthScreen()),
                 );
               },
               icon: const Icon(Icons.phone),

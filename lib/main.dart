@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:burnbank/services/auth_service.dart';
 import 'package:burnbank/services/steps_service.dart';
 import 'package:burnbank/screens/auth/login_screen.dart';
-import 'package:burnbank/screens/home/home_screen.dart';
+//import 'package:burnbank/screens/home/home_screen.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:burnbank/screens/main_screen.dart';
-import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
-
-final _forceLink = HealthFactory(); // <-- even if unused
-
-
-
 
 // Import Firebase options when available
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Only initialize Firebase on supported platforms for now
   bool firebaseInitialized = false;
-  
+
   try {
     // Initialize Firebase if possible
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
@@ -35,20 +26,21 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       firebaseInitialized = true;
-      print('Firebase initialized successfully');
+      log('Firebase initialized successfully');
     } else {
-      print('Running without Firebase (platform not configured yet)');
+      log('Running without Firebase (platform not configured yet)');
     }
   } catch (e) {
-    print('Error initializing Firebase: $e');
+    log('Error initializing Firebase: $e');
     // Continue without Firebase for development
   }
-  
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService(firebaseInitialized)),
-        ChangeNotifierProvider(create: (_) => StepsService(firebaseInitialized)),
+        ChangeNotifierProvider(
+            create: (_) => StepsService(firebaseInitialized)),
       ],
       child: const BurnBankApp(),
     ),
@@ -56,8 +48,8 @@ void main() async {
 }
 
 class BurnBankApp extends StatelessWidget {
-  const BurnBankApp({Key? key}) : super(key: key);
-  
+  const BurnBankApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -91,15 +83,15 @@ class BurnBankApp extends StatelessWidget {
 }
 
 class AuthenticationWrapper extends StatelessWidget {
-  const AuthenticationWrapper({Key? key}) : super(key: key);
+  const AuthenticationWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    
+
     // Check if user is signed in
     final isSignedIn = authService.currentUser != null;
-    
+
     // Return the appropriate screen based on authentication state
     return isSignedIn ? const MainScreen() : const LoginScreen();
   }

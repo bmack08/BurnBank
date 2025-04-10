@@ -6,22 +6,22 @@ import 'package:burnbank/screens/earnings/earnings_screen.dart';
 import 'package:burnbank/screens/profile/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  
+
   final List<Widget> _screens = [
     const HomeScreen(),
     const TournamentsScreen(),
     const EarningsScreen(),
     const ProfileScreen(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

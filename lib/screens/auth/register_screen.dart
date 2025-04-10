@@ -4,22 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:burnbank/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   String _errorMessage = '';
-  
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -28,23 +28,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-  
+
   // Register with email and password
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
       _errorMessage = '';
     });
-    
+
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       await authService.signUpWithEmail(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       // Navigate to home screen on success
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -81,9 +81,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 120,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Name field
               TextFormField(
                 controller: _nameController,
@@ -99,9 +99,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Email field
               TextFormField(
                 controller: _emailController,
@@ -121,9 +121,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Password field
               TextFormField(
                 controller: _passwordController,
@@ -137,15 +137,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a password';
                   }
-                  if (value.length < 8) { // Updated to 8 characters
+                  if (value.length < 8) {
+                    // Updated to 8 characters
                     return 'Password must be at least 8 characters';
                   }
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Confirm password field
               TextFormField(
                 controller: _confirmPasswordController,
@@ -165,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              
+
               // Error message
               if (_errorMessage.isNotEmpty)
                 Padding(
@@ -178,9 +179,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Register button
               ElevatedButton(
                 onPressed: _isLoading ? null : _register,
@@ -188,12 +189,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Create Account'),
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Create Account'),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Login link
               TextButton(
                 onPressed: () => Navigator.pop(context),

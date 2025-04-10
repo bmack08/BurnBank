@@ -1,18 +1,17 @@
 // lib/screens/home/home_screen.dart - COMPLETE FILE
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:burnbank/services/auth_service.dart';
 import 'package:burnbank/services/steps_service.dart';
 import 'package:burnbank/screens/home/map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final stepsService = Provider.of<StepsService>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('BurnBank'),
@@ -47,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 100,
                   height: 100,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Map tracking card
                 Card(
                   child: Padding(
@@ -83,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const MapScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => const MapScreen()),
                             );
                           },
                           icon: const Icon(Icons.directions_walk),
@@ -96,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Step counter
                 Card(
                   child: Padding(
@@ -125,11 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           children: [
                             LinearProgressIndicator(
-                              value: stepsService.todaySteps / stepsService.dailyGoal,
+                              value: stepsService.todaySteps /
+                                  stepsService.dailyGoal,
                               minHeight: 10,
                               backgroundColor: Colors.grey[300],
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                stepsService.goalReached ? Colors.green : Theme.of(context).primaryColor,
+                                stepsService.goalReached
+                                    ? Colors.green
+                                    : Theme.of(context).primaryColor,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -153,9 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Streak card
                 Card(
                   child: Padding(
@@ -173,7 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(16),
@@ -196,18 +200,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 12),
                         ElevatedButton(
                           onPressed: () => stepsService.incrementStreak(),
-                          child: const Text('Increment Streak (Test)'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                           ),
+                          child: const Text('Increment Streak (Test)'),
                         ),
                       ],
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Earnings
                 Card(
                   child: Padding(
@@ -231,22 +236,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('Multiplier: ${stepsService.multiplier.toStringAsFixed(1)}x'),
+                        Text(
+                            'Multiplier: ${stepsService.multiplier.toStringAsFixed(1)}x'),
                       ],
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Test buttons for development
                 ElevatedButton(
                   onPressed: () => stepsService.refreshSteps(),
                   child: const Text('Add 500 Steps (Test)'),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 ElevatedButton(
                   onPressed: () => stepsService.applyBoostMultiplier(1.5),
                   child: const Text('Apply 1.5x Boost (Test)'),
