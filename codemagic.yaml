@@ -1,35 +1,32 @@
 workflows:
-  ios-workflow:
-    name: iOS Workflow
-    instance_type: mac_mini_m1
+  burnbank-ios-build:
+    name: BurnBank iOS Build
     environment:
-      ios_signing:
-        distribution_type: ad_hoc # or ad_hoc for testing
-        bundle_identifier: com.Bennie.burnbank
-      vars:
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
       flutter: stable
       xcode: latest
       cocoapods: default
+      vars:
+        FLUTTER_ROOT: $FLUTTER_ROOT # Ensures podfile sees correct SDK path
     scripts:
-      - name: Set up code signing settings
+      - name: Install Flutter dependencies
         script: |
-          echo "Setting up code signing"
-          cd ios
-          flutter build ios --release --no-codesign
-      - name: Install CocoaPods dependencies
+          flutter pub get
+          flutter pub upgrade --major-versions
+      - name: Clean and pre-cache
+        script: |
+          flutter clean
+          flutter precache --ios
+      - name: iOS Pod Install
         script: |
           cd ios
           pod install
-      - name: Flutter build iOS
+      - name: Build iOS Release
         script: |
           flutter build ios --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
+      - build/ios/archive/*.xcarchive
     publishing:
       email:
         recipients:
-          - bmccoy67@gmail.com # Replace with your email
+          - bmccoy67@gmail.com
