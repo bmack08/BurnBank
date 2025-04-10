@@ -12,6 +12,7 @@ import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
 final _forceLink = HealthFactory(); // <-- even if unused
 
@@ -19,7 +20,7 @@ final _forceLink = HealthFactory(); // <-- even if unused
 
 
 // Import Firebase options when available
-import 'firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
