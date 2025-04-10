@@ -64,7 +64,8 @@ class MapScreenState extends State<MapScreen> {
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Location permissions are permanently denied')),
+          content: Text('Location permissions are permanently denied'),
+        ),
       );
       return;
     }
@@ -81,18 +82,18 @@ class MapScreenState extends State<MapScreen> {
         _mapController.move(_currentPosition!, 15.0);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error getting location: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error getting location: $e')));
     }
   }
 
   // Start tracking the walk
   void _startTracking() {
     if (_currentPosition == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Waiting for location...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Waiting for location...')));
       return;
     }
 
@@ -140,7 +141,7 @@ class MapScreenState extends State<MapScreen> {
       });
 
       // Center map on current position
-      _mapController.move(newPoint, _mapController.zoom);
+      _mapController.move(newPoint, _mapController.state.zoom);
     });
   }
 
@@ -168,42 +169,44 @@ class MapScreenState extends State<MapScreen> {
     // Show summary dialog
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Walk Summary'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Distance: ${(_distance / 1000).toStringAsFixed(2)} km'),
-            Text('Duration: ${duration.inMinutes} minutes'),
-            Text('Estimated Steps: $_estimatedSteps'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Add the estimated steps to today's total
-              // In a real app, this would sync with the health API
-              stepsService.addSteps(_estimatedSteps);
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Walk Summary'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Distance: ${(_distance / 1000).toStringAsFixed(2)} km'),
+                Text('Duration: ${duration.inMinutes} minutes'),
+                Text('Estimated Steps: $_estimatedSteps'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Add the estimated steps to today's total
+                  // In a real app, this would sync with the health API
+                  stepsService.addSteps(_estimatedSteps);
 
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Return to home screen
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Return to home screen
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Steps added to your daily total!')),
-              );
-            },
-            child: const Text('Add Steps'),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Steps added to your daily total!'),
+                    ),
+                  );
+                },
+                child: const Text('Add Steps'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
 
     // In a real app, save the GPS route to Firebase
@@ -212,9 +215,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track Your Walk'),
-      ),
+      appBar: AppBar(title: const Text('Track Your Walk')),
       body: Stack(
         children: [
           // Map
@@ -304,10 +305,12 @@ class MapScreenState extends State<MapScreen> {
                           StreamBuilder(
                             stream: Stream.periodic(const Duration(seconds: 1)),
                             builder: (context, snapshot) {
-                              final duration =
-                                  DateTime.now().difference(_startTime!);
+                              final duration = DateTime.now().difference(
+                                _startTime!,
+                              );
                               return Text(
-                                  '${duration.inMinutes}m ${duration.inSeconds % 60}s');
+                                '${duration.inMinutes}m ${duration.inSeconds % 60}s',
+                              );
                             },
                           ),
                         ],
