@@ -1,6 +1,8 @@
 platform :ios, '14.0'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+# Prevent win32-related transitive dependencies from causing build failures
+ENV['FLUTTER_USE_WINDOWS_PKG'] = 'false'
 
 project 'Runner', {
   'Debug' => :debug,

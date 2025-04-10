@@ -64,4 +64,3 @@ scripts:
     - flutter clean
     - flutter pub get
     - flutter precache --ios
-
