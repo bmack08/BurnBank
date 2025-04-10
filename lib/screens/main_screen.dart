@@ -1,9 +1,9 @@
 // lib/screens/main_screen.dart
 import 'package:flutter/material.dart';
-import 'package:step_rewards/screens/home/home_screen.dart';
-import 'package:step_rewards/screens/tournaments/tournaments_screen.dart';
-import 'package:step_rewards/screens/earnings/earnings_screen.dart';
-import 'package:step_rewards/screens/profile/profile_screen.dart';
+import 'package:burnbank/screens/home/home_screen.dart';
+import 'package:burnbank/screens/tournaments/tournaments_screen.dart';
+import 'package:burnbank/screens/earnings/earnings_screen.dart';
+import 'package:burnbank/screens/profile/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

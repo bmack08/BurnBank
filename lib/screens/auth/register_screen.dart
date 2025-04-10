@@ -1,7 +1,7 @@
 // lib/screens/auth/register_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/auth_service.dart';
+import 'package:burnbank/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

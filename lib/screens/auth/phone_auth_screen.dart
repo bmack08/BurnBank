@@ -1,7 +1,7 @@
 // lib/screens/auth/phone_auth_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/auth_service.dart';
+import 'package:burnbank/services/auth_service.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   const PhoneAuthScreen({Key? key}) : super(key: key);

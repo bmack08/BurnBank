@@ -1,9 +1,9 @@
 // lib/screens/auth/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/auth_service.dart';
-import 'package:step_rewards/screens/auth/register_screen.dart';
-import 'package:step_rewards/screens/auth/phone_auth_screen.dart';
+import 'package:burnbank/services/auth_service.dart';
+import 'package:burnbank/screens/auth/register_screen.dart';
+import 'package:burnbank/screens/auth/phone_auth_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

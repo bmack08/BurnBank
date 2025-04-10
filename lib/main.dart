@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/auth_service.dart';
-import 'package:step_rewards/services/steps_service.dart';
-import 'package:step_rewards/screens/auth/login_screen.dart';
-import 'package:step_rewards/screens/home/home_screen.dart';
+import 'package:burnbank/services/auth_service.dart';
+import 'package:burnbank/services/steps_service.dart';
+import 'package:burnbank/screens/auth/login_screen.dart';
+import 'package:burnbank/screens/home/home_screen.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:step_rewards/screens/main_screen.dart';
+import 'package:burnbank/screens/main_screen.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

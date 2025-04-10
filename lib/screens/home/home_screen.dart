@@ -1,9 +1,9 @@
 // lib/screens/home/home_screen.dart - COMPLETE FILE
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/auth_service.dart';
-import 'package:step_rewards/services/steps_service.dart';
-import 'package:step_rewards/screens/home/map_screen.dart';
+import 'package:burnbank/services/auth_service.dart';
+import 'package:burnbank/services/steps_service.dart';
+import 'package:burnbank/screens/home/map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

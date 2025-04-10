@@ -1,7 +1,7 @@
 // lib/screens/earnings/earnings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_rewards/services/steps_service.dart';
+import 'package:burnbank/services/steps_service.dart';
 import 'package:intl/intl.dart';
 
 class EarningsScreen extends StatelessWidget {
