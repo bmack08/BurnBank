@@ -220,6 +220,20 @@ class StepsService extends ChangeNotifier {
     _goalReached = _todaySteps >= _dailyGoal;
     notifyListeners();
   }
+
+  // Add this method to your steps_service.dart file
+  void addSteps(int steps) {
+    _todaySteps += steps;
+    _calculateEarnings();
+    _checkGoalStatus();
+  
+  // Sync to Firestore if connected
+    if (_firebaseInitialized && _auth?.currentUser != null) {
+    _syncStepsToFirestore(_todaySteps);
+  }
+  
+  notifyListeners();
+}
   
   // Update steps data (for real devices or development testing)
   Future<void> refreshSteps() async {
@@ -256,16 +270,3 @@ class StepsService extends ChangeNotifier {
   }
 }
 
-// Add this method to your steps_service.dart file
-void addSteps(int steps) {
-  _todaySteps += steps;
-  _calculateEarnings();
-  _checkGoalStatus();
-  
-  // Sync to Firestore if connected
-  if (_firebaseInitialized && _auth?.currentUser != null) {
-    _syncStepsToFirestore(_todaySteps);
-  }
-  
-  notifyListeners();
-}
