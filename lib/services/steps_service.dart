@@ -85,7 +85,7 @@ class StepsService extends ChangeNotifier {
       final midnight = DateTime(now.year, now.month, now.day);
       final types = [HealthDataType.STEPS];
 
-      final hasPermissions = await HealthFactory.hasPermissions(types) ?? false;
+      final hasPermissions = await _health!.hasPermissions(types) ?? false;
 
       if (!hasPermissions) {
         final isGranted = await _health!.requestAuthorization(types);

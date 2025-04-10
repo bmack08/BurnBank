@@ -27,6 +27,8 @@ post_install do |installer|
     # Ensure Swift 5.0 for health & other Swift-based pods
     target.build_configurations.each do |config|
       config.build_settings['SWIFT_VERSION'] = '5.0'
+      config.build_settings['OTHER_LDFLAGS'] ||= ['$(inherited)']
+      config.build_settings['OTHER_LDFLAGS'] << '-framework HealthKit'
     end
   end
 end
