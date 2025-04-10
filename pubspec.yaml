@@ -25,6 +25,9 @@ dependencies:
   provider: ^6.0.5
   shared_preferences: ^2.2.0
 
+  # Mapping
+  flutter_map: ^6.1.0
+
   # UI & Charts
   cupertino_icons: ^1.0.8
   fl_chart: ^0.70.2
