@@ -5,69 +5,53 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      vars:
-        FLUTTER_ROOT: $FLUTTER_ROOT
 
     ios:
-      xcode: latest
-      cocoapods: default
-      build_settings:
-        - "CODE_SIGN_STYLE=Automatic"
-        - "ENABLE_BITCODE=NO"
       capabilities:
         - healthkit
 
     scripts:
-      - name: Add HealthKit entitlements and permissions
+      - name: Set HealthKit entitlements and Info.plist
         script: |
           mkdir -p ios/Runner
           cat > ios/Runner/Runner.entitlements << EOL
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>com.apple.developer.healthkit</key>
-  <true/>
-</dict>
-</plist>
-EOL
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>com.apple.developer.healthkit</key>
+              <true/>
+              <key>com.apple.developer.healthkit.access</key>
+              <array/>
+          </dict>
+          </plist>
+          EOL
 
           cd ios
-          /usr/libexec/PlistBuddy -c "Add :NSHealthShareUsageDescription string 'We use HealthKit to track your steps and reward your activity.'" Runner/Info.plist 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSHealthUpdateUsageDescription string 'We use HealthKit to write your step count for rewards.'" Runner/Info.plist 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Set :NSHealthShareUsageDescription 'We use HealthKit to track your steps for rewards.'" Runner/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Add :NSHealthShareUsageDescription string 'We use HealthKit to track your steps for rewards.'" Runner/Info.plist
 
-          # Ensure entitlements are added to build settings
-          perl -i -pe 's/(CODE_SIGN_STYLE = Automatic;)/\1\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = Runner\/Runner.entitlements;/' Runner.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :NSHealthUpdateUsageDescription 'We sync your step data with HealthKit.'" Runner/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Add :NSHealthUpdateUsageDescription string 'We sync your step data with HealthKit.'" Runner/Info.plist
 
       - name: Install Flutter dependencies
         script: |
           flutter pub get
-          flutter pub upgrade --major-versions
 
       - name: Clean and pre-cache
         script: |
           flutter clean
           flutter precache --ios
 
-      - name: iOS Pod Install
+      - name: Install CocoaPods
         script: |
           cd ios
           pod install
 
-      - name: Sanitize rogue build flags
-        script: |
-          find ios -name "*.xcconfig" -exec sed -i '' '/-G/d' {} +
-          find ios -name "*.pbxproj" -exec sed -i '' '/-G/d' {} +
-
-      - name: Build iOS Release (No Code Sign)
+      - name: Build iOS Release (no codesign)
         script: |
           flutter build ios --release --no-codesign
 
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
-
-    publishing:
-      email:
-        recipients:
-          - bmccoy67@gmail.com
