@@ -6,44 +6,38 @@ workflows:
       xcode: latest
       cocoapods: default
       vars:
-        FLUTTER_ROOT: $FLUTTER_ROOT # Ensures podfile sees correct SDK path
+        FLUTTER_ROOT: $FLUTTER_ROOT
 
-ios:
-  xcode: latest
-  cocoapods: default
-  build_settings:
-    - "CODE_SIGN_STYLE=Automatic"
-    - "ENABLE_BITCODE=NO"
-    - "OTHER_LDFLAGS=$(inherited) -framework HealthKit"
-  capabilities:
-    - healthkit
+    ios:
+      xcode: latest
+      cocoapods: default
+      build_settings:
+        - "CODE_SIGN_STYLE=Automatic"
+        - "ENABLE_BITCODE=NO"
+      capabilities:
+        - healthkit
 
-  scripts:
+    scripts:
       - name: Add HealthKit entitlements and permissions
         script: |
-          # First create the entitlements file
           mkdir -p ios/Runner
           cat > ios/Runner/Runner.entitlements << EOL
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>com.apple.developer.healthkit</key>
-              <true/>
-              <key>com.apple.developer.healthkit.access</key>
-              <array/>
-          </dict>
-          </plist>
-          EOL
-          
-          # Add health permissions to Info.plist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>com.apple.developer.healthkit</key>
+  <true/>
+</dict>
+</plist>
+EOL
+
           cd ios
-          /usr/libexec/PlistBuddy -c "Add :NSHealthShareUsageDescription string 'We need access to your health data to count steps and calculate rewards'" Runner/Info.plist 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSHealthUpdateUsageDescription string 'We need access to your health data to count steps and calculate rewards'" Runner/Info.plist 2>/dev/null || true
-          
-          # Modify project.pbxproj to reference entitlements file in build settings
-          BUILD_SETTINGS='CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;'
-          perl -i -pe "s/(PRODUCT_BUNDLE_IDENTIFIER = com.Bennie.burnbank;)/\1\n\t\t\t\t$BUILD_SETTINGS/g" Runner.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Add :NSHealthShareUsageDescription string 'We use HealthKit to track your steps and reward your activity.'" Runner/Info.plist 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSHealthUpdateUsageDescription string 'We use HealthKit to write your step count for rewards.'" Runner/Info.plist 2>/dev/null || true
+
+          # Ensure entitlements are added to build settings
+          perl -i -pe 's/(CODE_SIGN_STYLE = Automatic;)/\1\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = Runner\/Runner.entitlements;/' Runner.xcodeproj/project.pbxproj
 
       - name: Install Flutter dependencies
         script: |
@@ -60,7 +54,7 @@ ios:
           cd ios
           pod install
 
-      - name: Sanitize rogue build flags (-G)
+      - name: Sanitize rogue build flags
         script: |
           find ios -name "*.xcconfig" -exec sed -i '' '/-G/d' {} +
           find ios -name "*.pbxproj" -exec sed -i '' '/-G/d' {} +
@@ -69,11 +63,11 @@ ios:
         script: |
           flutter build ios --release --no-codesign
 
-  artifacts:
+    artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
 
-  publishing:
+    publishing:
       email:
         recipients:
           - bmccoy67@gmail.com
