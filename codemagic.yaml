@@ -8,7 +8,17 @@ workflows:
       vars:
         FLUTTER_ROOT: $FLUTTER_ROOT # Ensures podfile sees correct SDK path
 
-    scripts:
+ios:
+  xcode: latest
+  cocoapods: default
+  build_settings:
+    - "CODE_SIGN_STYLE=Automatic"
+    - "ENABLE_BITCODE=NO"
+    - "OTHER_LDFLAGS=$(inherited) -framework HealthKit"
+  capabilities:
+    - healthkit
+
+  scripts:
       - name: Add HealthKit entitlements and permissions
         script: |
           # First create the entitlements file
@@ -59,11 +69,11 @@ workflows:
         script: |
           flutter build ios --release --no-codesign
 
-    artifacts:
+  artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
 
-    publishing:
+  publishing:
       email:
         recipients:
           - bmccoy67@gmail.com
